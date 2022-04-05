@@ -2,6 +2,9 @@
 
 > Tento repositář slouží jako shromaždiště všech možných znalostí (od základních detailů po užitečné maličkosti), které jsem získal a potřeboval v předmětu Správa operačních systémů (SOS) na VŠB-TUO
 
+## Užitečné skripty
+Některé úkony popisované v tomto repositáři jsem zapsal do Bash skriptů, které je možné si stáhnout a upravit podle potřeby. Jejich přehled se nachází [ZDE](setup-scripts.md).
+
 ## Software pro hostující stroj
 Veškerá výuka probíhá s využitím systému Debian GNU/Linux, který je nainstalován v prostředí VirtualBox.
 
