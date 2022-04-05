@@ -1,0 +1,11 @@
+[Unit]
+Description=This runs my scripts today
+After=multi-user.target
+
+[Service]
+Type=oneshot
+# Change this
+ExecStart=/root/cv4/uno.sh
+
+[Install]
+WantedBy=multi-user.target

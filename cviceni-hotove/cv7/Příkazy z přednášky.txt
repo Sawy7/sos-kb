@@ -1,0 +1,11 @@
+# Přidání/odebrání IP adresy
+ip address add 192.168.56.80/24 brd + dev enp0s8
+ip address del 192.168.56.80/24 brd + dev enp0s8
+
+# Statické routování
+ip route show
+ip route add default via 192.168.0.254
+ip route del default via 192.168.0.254
+
+# DNS
+cat /etc/resolv.conf
