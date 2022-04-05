@@ -222,8 +222,74 @@ root@debian:~# chmod g+r soubor.txt
 
 Změna vlastníka pomocí ```chown```:
 ```console
-chown franta soubor.txt
+root@debian:~# chown franta soubor.txt
 ```
 
 ## Kvóta
+Pro nastavení uživatelské kvóty v Debianu je zapotřebí balíček ```quota```:
+```console
+root@debian:~# apt update && apt install quota
+```
+
+Přípojný bod (disk), na který chceme kvótu aplikovat musí mít aplikovány jisté příznaky. Jednorázově můžeme takový oddíl namountovat takto (oddíl, na kterém jsou domovské adresáře):
+```console
+root@debian:~# mount -o remount,usrquota,grpquota /home
+```
+
+Lepší volbou bude ale tyto příznaky rovnou zanést do */etc/fstab*. Poté je nutné buď opět zavolat ```mount```, nebo restartovat systém:
+```console
+/dev/sdb1 /home  ext4    defaults,usrquota,grpquota    0   0
+```
+
+Nyní je potřeba povolit a nastartovat službu spravující kvóty a nastavit ji na konkrétní přípojný bod:
+```console
+root@debian:~# systemctl enable quota
+root@debian:~# systemctl start quota
+
+root@debian:~# quotacheck /dev/sdb1
+root@debian:~# quotaon /dev/sdb1
+```
+
+Kvótu konkrétnímu uživateli lze pak nastavit jednoduchým příkazem:
+```console
+root@debian:~# setquota -u franta 200M 220M 0 0 /home
+```
+> Je tzv. soft a hard limit (pro bloky a inody). Uživatel *franta* má soft limit 200 MB, hard limit 220 MB a pro inody nemá žádný limit. Toto vše se vztahuje k přípojnému bodu */home*
+
+Zobrazení přehledu kvót pro daný připojný bod:
+```console
+root@debian:~# repquota -s /home
+```
+
+## Spouštění se startem systému
+### systemd
+Systemd je init systém, který se užívá v Debianu. Je možné pro něj psát jednotky, které spustí daný program za splnění určitých podmínek. Tento kousek softwaru je postihnutelný v tomto dokumentu, ale existuje mnoho dalších zdrojů, jako [TENTO](https://www.root.cz/serialy/nebojte-se-systemd/).
+
+Tady bude popsána velmi jednoduchá jednotka pro spuštění skriptu. Soubor *task.service* níže musí být vložen do */etc/systemd/system/*:
+
+```console
+[Unit]
+Description=This runs my scripts today
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/root/myscript.sh
+# ^^ Path to executable file ^^
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Povolení automatického spouštění a rovnou její spuštění:
+```console
+root@debian:~# systemctl enable myscript
+root@debian:~# systemctl start myscript
+```
+
+### Crontab
+Tabulka, do které je možné vložit příkazy k pravidelnému spouštění. Vhodné např. pro spouštění zálohování. Systémový crontab (ten asi chceme spíše) se nachází na */etc/crontab*. Pro úplnost se dá uživatelský otevřít pomocí ```crontab -e```, ale pro místní účely bude lepší psát do toho systémového. Jak něco zapsat je krásně vysvětleno přímo v souboru, takže není třeba se opakovat.
+
+## DHCP Server
+
 

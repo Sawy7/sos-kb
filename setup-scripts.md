@@ -22,3 +22,8 @@ Vytvoření jednoho oddílu na specifikovaném disku a naformátování v soubor
 ```console
 curl -s -L https://raw.githubusercontent.com/Sawy7/sos-kb/master/setup-scripts/partition-whole-disk.sh | bash
 ```
+
+Průvodce (wizard) pro jednoduchou instalaci a konfiguraci *ISC DHCP Server*:
+```console
+curl -s -L https://raw.githubusercontent.com/Sawy7/sos-kb/master/setup-scripts/dhcpd-wiz.sh | bash
+```
